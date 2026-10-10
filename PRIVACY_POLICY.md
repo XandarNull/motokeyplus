@@ -1,20 +1,20 @@
 # Privacy Policy for MotoKey+
 
-**Effective Date:** September 28, 2026  
-**Last Updated:** September 28, 2026
+**Effective Date:** October 10, 2026  
+**Last Updated:** October 10, 2026
 
-**MotoKey+** ("the Application") is developed as a standalone, privacy-first local device utility designed to empower users to customize and expand the physical Action Key on supported Motorola smartphones.
+**MotoKey+** ("the Application") is developed as an open, privacy-first, standalone local utility designed to empower users to customize and expand the physical Action Key on supported Motorola smartphones.
 
-We believe strongly in user privacy, transparency, and data minimization. This Privacy Policy details our practices regarding user data and device permissions.
+We believe uncompromisingly in user privacy, complete transparency, and data minimization. This Privacy Policy details our practices regarding user data, local storage, and device permissions.
 
 ---
 
 ## 1. Summary: Zero Data Collection & Pure Offline Operation
 
-* **Zero Data Collection:** MotoKey+ does **not** collect, record, log, store, or monitor any personal information, device identifiers, app usage statistics, or telemetry.
-* **Pure Offline Operation:** The Application does **not** request or use Android's Internet permission (`android.permission.INTERNET`). Because network access is completely omitted from the application manifest, it is technically impossible for MotoKey+ to transmit any data off your device.
-* **Zero Third-Party SDKs:** The Application integrates no third-party analytics libraries (such as Firebase Analytics or Google Analytics), no crash-reporting trackers, and no advertising networks.
-* **No User Accounts:** You do not need to register, create an account, log in, or provide personal credentials to use MotoKey+.
+* **Zero Data Collection:** MotoKey+ does **not** collect, record, log, store, monitor, or transmit any personal information, device identifiers, hardware serials, location data, or telemetry.
+* **Pure Offline Operation:** The Application does **not** declare, request, or use Android's Internet permission (`android.permission.INTERNET`). Because network access is completely omitted from the application manifest, it is technically impossible for MotoKey+ to send or receive data over the internet or communicate with remote servers.
+* **Zero Third-Party SDKs & Trackers:** The Application incorporates no third-party tracking libraries, analytics frameworks (such as Firebase Analytics, Flurry, or Google Analytics), crash-reporting services, advertising SDKs, or external trackers.
+* **No User Accounts:** You are never asked to register, create an account, log in, or provide personal credentials. The app operates 100% locally on your device.
 
 ---
 
@@ -22,52 +22,64 @@ We believe strongly in user privacy, transparency, and data minimization. This P
 
 MotoKey+ includes an optional Android Accessibility Service (`MotoKeyAccessibilityService`).
 
-* **Purpose:** The Accessibility Service is used exclusively to:
-  1. Intercept physical Action Key presses (hardware key events and Push-To-Talk events) to execute your chosen gestures (Single Press, Double Press, and Press & Hold).
-  2. Perform standard Android system global actions directly via the official Accessibility API, specifically:
+* **Purpose:** The Accessibility Service is used strictly and exclusively to:
+  1. Intercept physical Action Key broadcasts and key events (`android.intent.action.PTT.down` / `android.intent.action.PTT.up`) to recognize your configured hardware gestures (Single Press, Double Press, and Press & Hold).
+  2. Execute standard Android global actions directly via the official Accessibility API upon key press:
      - Taking screenshots (`GLOBAL_ACTION_TAKE_SCREENSHOT`)
-     - Pulling down the notification shade (`GLOBAL_ACTION_NOTIFICATIONS`)
-     - Opening the Quick Settings panel (`GLOBAL_ACTION_QUICK_SETTINGS`)
-* **Privacy & Least Privilege:**
-  * **No Screen Reading:** The service explicitly sets `canRetrieveWindowContent="false"`. It cannot inspect, read, parse, or access your screen content, text, passwords, messages, or financial information.
-  * **No Keystroke Logging:** The service does not log, record, or track general keyboard input.
-  * **No Automated Touch Scraping:** The service does not simulate arbitrary screen taps, gesture automation, or user interface scraping.
-* **Consent:** The Accessibility Service is strictly disabled by default. It is only enabled when you explicitly review the in-app disclosure and manually grant permission within Android's system Accessibility settings. You can revoke this permission at any time via your device's System Settings.
+     - Expanding the notification panel (`GLOBAL_ACTION_NOTIFICATIONS`)
+     - Expanding the Quick Settings panel (`GLOBAL_ACTION_QUICK_SETTINGS`)
+* **Privacy & Least Privilege Safeguards:**
+  * **No Screen Content Reading:** The service explicitly configures `canRetrieveWindowContent="false"`. MotoKey+ cannot inspect, read, parse, extract, or log your screen contents, text, passwords, messages, contacts, or financial details.
+  * **No Keystroke Logging:** The service does not log or monitor general keyboard input or touch typing.
+  * **No Automated Touch Scraping:** The service does not simulate arbitrary screen taps, touch gestures, or UI automation macros.
+  * **Event Types:** The service declares `android:accessibilityEventTypes="typeWindowStateChanged"` solely to ensure the Android operating system maintains service binding and hardware key responsiveness across device restarts and window transitions. The service performs zero event processing on window changes.
+* **Explicit User Consent:** The Accessibility Service is disabled by default. It can only be activated when you explicitly review the in-app prominent disclosure dialog and manually enable the service within Android System Settings. You retain the right to revoke this permission at any time via *Settings → Accessibility*.
 
 ---
 
 ## 3. Device Permissions
 
-The Application requests only the absolute minimum permissions necessary to deliver local key-remapping features:
+The Application requests only the minimal set of Android permissions necessary to deliver local key-remapping functions:
 
 * **Vibrate (`android.permission.VIBRATE`):**  
-  Used solely to provide tactile haptic feedback vibrations when the physical Action Key is pressed.
+  Used solely to deliver haptic tactile vibration feedback when a hardware Action Key gesture is recognized.
 * **Wake Lock (`android.permission.WAKE_LOCK`):**  
-  Used solely to hold a temporary partial CPU wake lock for sub-second fractions of a second during physical Action Key gesture evaluation windows (such as waiting for the double-press window or press-and-hold duration) while the screen is off. This ensures actions fire instantaneously without CPU suspend latency. The wake lock is released immediately once the action executes and is never held while the device is idle.
+  Used solely to acquire a temporary partial CPU wake lock for sub-second fractions of a second during physical key gesture recognition windows (e.g. evaluating rapid double-presses or press-and-hold durations) while the screen is off. This guarantees zero hardware lag without CPU suspend latency. The wake lock is released immediately once an action dispatches and is never held while idle.
 * **Do Not Disturb Access (`android.permission.ACCESS_NOTIFICATION_POLICY`):**  
-  Used solely to toggle Do Not Disturb (DND) mode when you explicitly assign the Action Key to the DND Toggle action.
+  Used solely to toggle system Do Not Disturb (DND) modes when you explicitly assign the Action Key to the Do Not Disturb action.
 * **Battery Optimization Exemption (`android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`):**  
-  Used solely to allow users to exempt MotoKey+ from Android Doze mode so that physical hardware Action Key events are never dropped or delayed while the screen is off or the device is idle. MotoKey+ never runs continuous background network polling and adheres to zero-idle CPU usage.
-* **Flashlight / Torch:**  
-  Controlled strictly via Android's hardware `CameraManager.setTorchMode()` API. MotoKey+ does **not** request or require the Camera permission (`android.permission.CAMERA`), does not open camera sensors, and does not capture photo or video data.
-* **On-Screen Mode Feedback:**  
-  Transient visual feedback pills (such as "Ring" or "Vibrate") are rendered using Android's native accessibility overlay window capability (`TYPE_ACCESSIBILITY_OVERLAY`). MotoKey+ does **not** request or require Notification permissions (`POST_NOTIFICATIONS`) or "Display over other apps" permissions (`SYSTEM_ALERT_WINDOW`). MotoKey+ never sends push notifications, advertisements, or status bar notifications.
+  Used solely to prompt the native system dialog allowing MotoKey+ to remain active during Android Doze mode, ensuring physical hardware key presses are never dropped while the phone is asleep.
+* **Direct Dial Phone Calls (`android.permission.CALL_PHONE`):**  
+  Used optionally and strictly when you map an Action Key gesture to a contact's Direct Dial shortcut. If this permission is not granted by the user, MotoKey+ automatically and safely falls back to opening the system phone dialer (`Intent.ACTION_DIAL`) with the phone number pre-filled, never initiating automated calls without your consent.
+* **Boot Completion (`android.permission.RECEIVE_BOOT_COMPLETED`):**  
+  Used solely to initialize the background hardware listener (`BootReceiver`) upon device reboot, ensuring physical Action Key gestures function immediately after restarting your phone without requiring manual app launch.
+* **Flashlight / Torch API:**  
+  Controlled directly via the official Android `CameraManager.setTorchMode()` API. MotoKey+ does **not** request or use the Camera permission (`android.permission.CAMERA`), does not access camera image sensors, and does not capture photos or videos.
+* **On-Screen Pop-Up Notifications:**  
+  Transient visual feedback pills (such as "Ring" or "Vibrate") are rendered using the native `TYPE_ACCESSIBILITY_OVERLAY` window flag. MotoKey+ does **not** request notification posting permissions (`android.permission.POST_NOTIFICATIONS`) and never displays advertisements or status bar push notifications.
 
 ---
 
-## 4. Children’s Privacy
+## 4. Local Preferences & App Shortcuts
 
-The Application does not collect or solicit information from anyone, including children under the age of 13.
-
----
-
-## 5. Changes to This Privacy Policy
-
-If updates are made to this Privacy Policy, the revised policy will be posted directly within the application repository and linked in the Google Play Store listing.
+* **Local Preference Storage:** All user configurations (selected gesture actions, timeout durations, haptic toggles, and shortcut mappings) are stored locally in private application preferences (`SharedPreferences`) sandboxed within your device's internal storage (`/data/data/app.xandar.motokeyplus`). They are never backed up to remote clouds or shared with third parties.
+* **App Shortcuts & Deep Links:** When you assign an Action Key gesture to launch a specific installed app or third-party shortcut (such as a messaging contact, navigation destination, or web bookmark), MotoKey+ merely passes the public Android `Intent` to the target app via the Android framework. MotoKey+ does not monitor, collect, or log your interactions within third-party applications.
 
 ---
 
-## 6. Contact Us
+## 5. Children’s Privacy
 
-If you have questions, feedback, or concerns regarding this Privacy Policy or MotoKey+, please contact the developer via GitHub:  
+MotoKey+ does not collect, store, or transmit personal data from any users, including children under the age of 13.
+
+---
+
+## 6. Changes to This Privacy Policy
+
+Any future revisions or updates to this Privacy Policy will be published directly within the application repository and linked within the app settings and Google Play Store listing.
+
+---
+
+## 7. Contact Information
+
+If you have questions, feedback, or inquiries regarding this Privacy Policy or MotoKey+, please contact the developer via GitHub:  
 [https://github.com/XandarNull/motokeyplus](https://github.com/XandarNull/motokeyplus)
