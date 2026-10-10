@@ -1,6 +1,6 @@
 # Privacy Policy for MotoKey+
 
-**Effective Date:** September 27, 2026  
+**Effective Date:** September 28, 2026  
 **Last Updated:** September 28, 2026
 
 **MotoKey+** ("the Application") is developed as a standalone, privacy-first local device utility designed to empower users to customize and expand the physical Action Key on supported Motorola smartphones.
@@ -42,8 +42,16 @@ The Application requests only the absolute minimum permissions necessary to deli
 
 * **Vibrate (`android.permission.VIBRATE`):**  
   Used solely to provide tactile haptic feedback vibrations when the physical Action Key is pressed.
+* **Wake Lock (`android.permission.WAKE_LOCK`):**  
+  Used solely to hold a temporary partial CPU wake lock for sub-second fractions of a second during physical Action Key gesture evaluation windows (such as waiting for the double-press window or press-and-hold duration) while the screen is off. This ensures actions fire instantaneously without CPU suspend latency. The wake lock is released immediately once the action executes and is never held while the device is idle.
+* **Do Not Disturb Access (`android.permission.ACCESS_NOTIFICATION_POLICY`):**  
+  Used solely to toggle Do Not Disturb (DND) mode when you explicitly assign the Action Key to the DND Toggle action.
+* **Battery Optimization Exemption (`android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`):**  
+  Used solely to allow users to exempt MotoKey+ from Android Doze mode so that physical hardware Action Key events are never dropped or delayed while the screen is off or the device is idle. MotoKey+ never runs continuous background network polling and adheres to zero-idle CPU usage.
 * **Flashlight / Torch:**  
   Controlled strictly via Android's hardware `CameraManager.setTorchMode()` API. MotoKey+ does **not** request or require the Camera permission (`android.permission.CAMERA`), does not open camera sensors, and does not capture photo or video data.
+* **On-Screen Mode Feedback:**  
+  Transient visual feedback pills (such as "Ring" or "Vibrate") are rendered using Android's native accessibility overlay window capability (`TYPE_ACCESSIBILITY_OVERLAY`). MotoKey+ does **not** request or require Notification permissions (`POST_NOTIFICATIONS`) or "Display over other apps" permissions (`SYSTEM_ALERT_WINDOW`). MotoKey+ never sends push notifications, advertisements, or status bar notifications.
 
 ---
 
